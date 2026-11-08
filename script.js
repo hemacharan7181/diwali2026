@@ -1,49 +1,19 @@
-// Efficient 2D sky-shot fireworks: capped pixel ratio, pooled frame loop and bounded particles.
+// Smooth, lightweight sky-shot fireworks.
 const canvas=document.getElementById('sky'),ctx=canvas.getContext('2d',{alpha:true});
-let W=innerWidth,H=innerHeight,DPR=1,rockets=[],particles=[],last=0,mode='idle',frame=0;
-const palette=['#ffb9df','#ffe5aa','#d3c3ff','#fff6fc','#ff83c6','#ffd0ed'];
-const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-function resize(){W=innerWidth;H=innerHeight;DPR=Math.min(devicePixelRatio||1,1.35);canvas.width=Math.floor(W*DPR);canvas.height=Math.floor(H*DPR);canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(DPR,0,0,DPR,0,0)}
-addEventListener('resize',resize);resize();
-function launch(x=Math.random()*W,y=H+12,scale=1){
- const target=H*(.13+Math.random()*.34);
- rockets.push({x,y,px:x,py:y,vx:(Math.random()-.5)*.65,vy:-(7.2+Math.random()*2.3)*scale,target,color:palette[(Math.random()*palette.length)|0],tail:[]});
-}
-function explode(x,y,color,scale=1){
- const n=Math.round((mode==='idle'?52:88)*scale);
- for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=(1.05+Math.random()*3.7)*scale;
- particles.push({x,y,px:x,py:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:45+Math.random()*35,max:80,r:.7+Math.random()*1.6,c:color,drag:.982,gravity:.045})}
- // Bright crackling stars, limited count to preserve smoothness.
- for(let i=0;i<Math.round(12*scale);i++){const a=Math.random()*Math.PI*2,s=1+Math.random()*2.1;particles.push({x,y,px:x,py:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:38+Math.random()*25,max:65,r:.7,c:'#fff4d5',drag:.98,gravity:.035})}
- if(particles.length>1250)particles.splice(0,particles.length-1250);
-}
-function drawRocket(r){
- r.tail.push([r.x,r.y]);if(r.tail.length>7)r.tail.shift();
- ctx.beginPath();for(let i=0;i<r.tail.length;i++){const p=r.tail[i];if(i===0)ctx.moveTo(p[0],p[1]);else ctx.lineTo(p[0],p[1])}
- ctx.strokeStyle=r.color;ctx.lineWidth=2;ctx.shadowBlur=12;ctx.shadowColor=r.color;ctx.stroke();ctx.shadowBlur=0;
- ctx.beginPath();ctx.arc(r.x,r.y,2.1,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
-}
-function tick(t){
- requestAnimationFrame(tick);const dt=Math.min((t-last||16.7)/16.7,1.6);last=t;frame++;
- // Light idle ambience; frequent volleys only after opening. Finale is a celebratory barrage.
- const interval=mode==='final'?210:mode==='active'?530:2400;
- if(!reduced && t-(tick.launchAt||0)>interval){launch(W*(.07+Math.random()*.86),H+10,mode==='idle'?.75:1.12);tick.launchAt=t;
-  if(mode==='final'&&Math.random()>.38)setTimeout(()=>launch(W*(.08+Math.random()*.84),H+10,1.1),110)}
- ctx.clearRect(0,0,W,H);
- for(let i=rockets.length-1;i>=0;i--){const r=rockets[i];r.px=r.x;r.py=r.y;r.x+=r.vx*dt;r.y+=r.vy*dt;r.vy+=.075*dt;drawRocket(r);if(r.y<=r.target||r.vy>-.2){explode(r.x,r.y,r.color,mode==='idle'?.8:1.2);rockets.splice(i,1)}}
- for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.px=p.x;p.py=p.y;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=Math.pow(p.drag,dt);p.vy=p.vy*Math.pow(p.drag,dt)+p.gravity*dt;p.life-=dt;
-  const a=Math.max(0,p.life/p.max);ctx.globalAlpha=a;ctx.strokeStyle=p.c;ctx.lineWidth=p.r;ctx.shadowBlur=3;ctx.shadowColor=p.c;ctx.beginPath();ctx.moveTo(p.px,p.py);ctx.lineTo(p.x,p.y);ctx.stroke();if(p.life<=0)particles.splice(i,1)}
- ctx.globalAlpha=1;ctx.shadowBlur=0;
-}
-requestAnimationFrame(tick);
-
-const ids=['cover','story1','story2','story3','letter','final'];let current='cover';
-function show(id){ids.forEach(v=>document.getElementById(v).classList.toggle('active',v===id));current=id;window.scrollTo({top:0,behavior:'smooth'});if(id==='final'){mode='final';for(let i=0;i<8;i++)setTimeout(()=>launch(W*(.08+Math.random()*.84),H+10,1.15),i*180)}}
-document.getElementById('start').addEventListener('click',()=>{mode='active';show('story1');for(let i=0;i<6;i++)setTimeout(()=>launch(W*(.08+i*.16),H+10,1.15),i*190)});
+let W=innerWidth,H=innerHeight,D=1,rockets=[],sparks=[],last=0,mode='idle';
+const colors=['#ffb9df','#ffe5aa','#d3c3ff','#fff6fc','#ff83c6','#ffd0ed'];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function resize(){W=innerWidth;H=innerHeight;D=Math.min(devicePixelRatio||1,1.3);canvas.width=W*D;canvas.height=H*D;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(D,0,0,D,0,0)}addEventListener('resize',resize);resize();
+function launch(x=Math.random()*W,scale=1){const y=H+10;rockets.push({x,y,vx:(Math.random()-.5)*.6,vy:-(7.5+Math.random()*2.2)*scale,target:H*(.12+Math.random()*.34),color:colors[(Math.random()*colors.length)|0],tail:[]})}
+function burst(x,y,c,scale=1){const n=Math.round(90*scale);for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=(1+Math.random()*4)*scale;sparks.push({x,y,px:x,py:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:50+Math.random()*34,max:84,r:.7+Math.random()*1.7,c,drag:.984,g:.04})}for(let i=0;i<15*scale;i++){const a=Math.random()*Math.PI*2,s=1+Math.random()*2;sparks.push({x,y,px:x,py:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:50,max:65,r:.8,c:'#fff3d7',drag:.98,g:.03})}if(sparks.length>1400)sparks.splice(0,sparks.length-1400)}
+function loop(t){requestAnimationFrame(loop);const dt=Math.min((t-last||16.7)/16.7,1.5);last=t;const interval=mode==='final'?220:mode==='active'?510:2600;if(!reduce&&t-(loop.launched||0)>interval){launch(W*(.06+Math.random()*.88),mode==='idle'?.8:1.2);loop.launched=t;if(mode==='final'&&Math.random()>.45)setTimeout(()=>launch(W*(.1+Math.random()*.8),1.2),130)}ctx.clearRect(0,0,W,H);
+for(let i=rockets.length-1;i>=0;i--){const r=rockets[i];r.tail.push([r.x,r.y]);if(r.tail.length>8)r.tail.shift();r.x+=r.vx*dt;r.y+=r.vy*dt;r.vy+=.07*dt;ctx.beginPath();r.tail.forEach((p,j)=>j?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.strokeStyle=r.color;ctx.lineWidth=2.2;ctx.shadowBlur=12;ctx.shadowColor=r.color;ctx.stroke();ctx.shadowBlur=0;if(r.y<r.target||r.vy>-.2){burst(r.x,r.y,r.color,mode==='idle'?.85:1.3);rockets.splice(i,1)}}
+for(let i=sparks.length-1;i>=0;i--){const p=sparks[i];p.px=p.x;p.py=p.y;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=Math.pow(p.drag,dt);p.vy=p.vy*Math.pow(p.drag,dt)+p.g*dt;p.life-=dt;ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.strokeStyle=p.c;ctx.lineWidth=p.r;ctx.shadowBlur=3;ctx.shadowColor=p.c;ctx.beginPath();ctx.moveTo(p.px,p.py);ctx.lineTo(p.x,p.y);ctx.stroke();if(p.life<=0)sparks.splice(i,1)}ctx.globalAlpha=1;ctx.shadowBlur=0}
+requestAnimationFrame(loop);
+const ids=['cover','s1','s2','s3','s4','s5','letter','final'];function show(id){ids.forEach(x=>document.getElementById(x).classList.toggle('active',x===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='final'){mode='final';for(let i=0;i<10;i++)setTimeout(()=>launch(W*(.07+Math.random()*.86),1.2),i*170)}}
+document.getElementById('start').onclick=()=>{mode='active';show('s1');for(let i=0;i<7;i++)setTimeout(()=>launch(W*(.06+i*.14),1.25),i*160)};
 document.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.next)));
-document.getElementById('replay').addEventListener('click',()=>{mode='idle';show('cover')});
-
-// Soft original synthesized bell tones; browser audio begins only after explicit tap.
-let audio=null,musicTimer=null,musicOn=false,index=0;const melody=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,1046.5];
-function note(freq){if(!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(.0001,audio.currentTime);g.gain.exponentialRampToValueAtTime(.026,audio.currentTime+.05);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+.85);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+.9)}
-document.getElementById('sound').addEventListener('click',async()=>{if(musicOn){clearInterval(musicTimer);musicOn=false;document.getElementById('soundText').textContent='Sound off';document.getElementById('sound').setAttribute('aria-pressed','false');return}const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audio=audio||new AC();await audio.resume();musicOn=true;document.getElementById('soundText').textContent='Sound on';document.getElementById('sound').setAttribute('aria-pressed','true');note(melody[index++%melody.length]);musicTimer=setInterval(()=>note(melody[index++%melody.length]),700)});
+document.getElementById('replay').onclick=()=>{mode='idle';show('cover')};
+let audio=null,timer=null,on=false,n=0;const melody=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,1046.5];
+function tone(f){if(!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,audio.currentTime);g.gain.exponentialRampToValueAtTime(.025,audio.currentTime+.05);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+.8);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+.85)}
+document.getElementById('sound').onclick=async()=>{if(on){clearInterval(timer);on=false;document.getElementById('soundText').textContent='Sound off';return}const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audio=audio||new AC();await audio.resume();on=true;document.getElementById('soundText').textContent='Sound on';tone(melody[n++%melody.length]);timer=setInterval(()=>tone(melody[n++%melody.length]),690)};
