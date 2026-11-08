@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#100b20" />
+  <meta name="description" content="A little Diwali surprise made with love for Harshi." />
+  <title>For My Harshi ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="ambient-glow glow-one"></div>
+  <div class="ambient-glow glow-two"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="For Harshi home"><span class="brand-dot"></span> a little world for harshi</a>
+    <button class="sound-toggle glass" id="soundToggle" type="button" aria-pressed="false">
+      <span id="soundIcon">♫</span><span id="soundLabel">Sound off</span>
+    </button>
+  </header>
+
+  <main>
+    <section class="screen hero active" id="welcome">
+      <div class="eyebrow"><span class="eyebrow-line"></span> A FESTIVAL OF LIGHTS · A LITTLE SURPRISE <span class="eyebrow-line"></span></div>
+      <div class="hero-orbit" aria-hidden="true">
+        <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+        <div class="orbit-heart">💗</div>
+        <div class="orbit-spark spark-a">✦</div><div class="orbit-spark spark-b">✧</div>
+      </div>
+      <p class="overline">For the girl who makes my world brighter</p>
+      <h1>Happy Diwali,<br><em>Harshi.</em></h1>
+      <p class="hero-copy">A little light, a few memories, and a whole lot of love — made just for you.</p>
+      <button class="primary-btn" id="beginBtn" type="button">Open your surprise <span>↗</span></button>
+      <div class="scroll-note"><span class="scroll-dot"></span> MADE WITH LOVE, JUST FOR YOU</div>
+    </section>
+
+    <section class="screen journey" id="journey">
+      <div class="section-kicker">01 / A LITTLE JOURNEY</div>
+      <h2>Some people feel<br>like <em>light.</em></h2>
+      <p class="section-intro">And somehow, you became that light in my life.</p>
+      <div class="memory-grid">
+        <article class="memory-card glass">
+          <div class="card-icon">✨</div><span class="card-number">01</span>
+          <h3>My lucky charm</h3>
+          <p>Nuvvu na life lo ochaka, even ordinary days started feeling special.</p>
+        </article>
+        <article class="memory-card glass">
+          <div class="card-icon">🫂</div><span class="card-number">02</span>
+          <h3>My safe place</h3>
+          <p>Hard days lo support ga undi, nannu malli smile cheyinchina person nuvve.</p>
+        </article>
+        <article class="memory-card glass">
+          <div class="card-icon">💗</div><span class="card-number">03</span>
+          <h3>My favourite dream</h3>
+          <p>Not a perfect story — just two people choosing to grow and move forward together.</p>
+        </article>
+      </div>
+      <button class="primary-btn next-btn" data-next="dreams" type="button">There's more <span>→</span></button>
+    </section>
+
+    <section class="screen dreams" id="dreams">
+      <div class="section-kicker">02 / THE DREAM WE SHARE</div>
+      <div class="dream-icon">🌙</div>
+      <h2>One day,<br><em>we'll get there.</em></h2>
+      <p class="section-intro">I hope life gives both of us the chance to make these little wishes real.</p>
+      <div class="dream-list glass">
+        <div class="dream-row"><span class="dream-check">✦</span><div><strong>Build our careers</strong><small>Manam iddaram mana dream jobs achieve avvali.</small></div></div>
+        <div class="dream-row"><span class="dream-check">✦</span><div><strong>Make our parents proud</strong><small>Mana families ki happiness and proud moments ivvali.</small></div></div>
+        <div class="dream-row"><span class="dream-check">✦</span><div><strong>Choose our forever</strong><small>With time, love and family blessings, mana marriage dream nijam avvali.</small></div></div>
+      </div>
+      <button class="primary-btn next-btn" data-next="letter" type="button">Open your letter 💌</button>
+    </section>
+
+    <section class="screen letter-screen" id="letter">
+      <div class="section-kicker">03 / A LETTER FOR YOU</div>
+      <h2>Just a little<br><em>something.</em></h2>
+      <p class="section-intro">Tap the glowing envelope. I have something to tell you.</p>
+      <button class="envelope-wrap" id="openLetter" type="button" aria-label="Open your letter">
+        <span class="envelope-aura"></span>
+        <span class="envelope">
+          <span class="letter-paper"><span>For my Harshi</span><span class="paper-heart">💗</span></span>
+          <span class="envelope-back"></span><span class="envelope-flap"></span><span class="envelope-front"></span>
+          <span class="seal">💖</span>
+        </span>
+        <span class="tap-hint">TAP TO OPEN</span>
+      </button>
+      <div class="letter-message glass" id="letterMessage" aria-live="polite">
+        <div class="letter-topline">MY DIWALI WISH FOR YOU <span>✦</span></div>
+        <p>Happyyy Diwali bangarammm 💗✨</p>
+        <p>Nuvvu na life lo ochina tarvatha so many things changed ra. You are my lucky charm, the light in my darkest days and one of my biggest supports. Sometimes words are not enough to explain how much your presence means to me. Nuvvu unte even normal days feel special.</p>
+        <p>Ee Diwali ki my biggest wish enti ante, manam iddaram our careers lo chala successful avvali, mana parents ni proud feel cheyinchali, and one day mana dream of getting married ni reality cheskovali. 💖</p>
+        <p>Journey perfect ga undakapovachu, but I hope manam patience tho, understanding tho, and care tho grow avuthu mundhuku vellali. I want us to celebrate our little wins and big dreams together.</p>
+        <p class="letter-signoff">Happy Diwali, my lucky charm.<br><em>Someday, Mr. Hema Charan & Mrs. Harshini.</em> 💗</p>
+        <div class="letter-footer">ALWAYS ROOTING FOR US <span>💋</span></div>
+      </div>
+      <button class="primary-btn next-btn fireworks-btn" data-next="finale" type="button">Make a wish together ✨</button>
+    </section>
+
+    <section class="screen finale" id="finale">
+      <div class="finale-content">
+        <div class="finale-kicker">A WISH FOR OUR TOMORROW</div>
+        <div class="finale-heart">💗</div>
+        <h2>May our dreams<br><em>find their light.</em></h2>
+        <p>Happy Diwali, my Harshi.</p>
+        <div class="finale-names glass">Mr. Hema Charan <span>✦</span> Mrs. Harshini</div>
+        <p class="finale-small">Until the day we celebrate this festival side by side. ✨</p>
+        <button class="replay-btn" id="replayBtn" type="button">↺ Experience it again</button>
+      </div>
+      <div class="firework-label">MAKE A WISH <span>✧</span> KEEP SHINING</div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
