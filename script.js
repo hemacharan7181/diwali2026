@@ -1,2 +1,227 @@
-*{box-sizing:border-box}:root{--pink:#f7b4dc;--pale:#ffdef0;--white:#fffaff}html,body{margin:0;min-height:100%;background:#080817;color:var(--white);font-family:'DM Sans',sans-serif}body{min-height:100svh;overflow-x:hidden;background:radial-gradient(ellipse at 50% 44%,#281435 0%,#151025 46%,#080817 100%)}#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}.sky-wash{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse,transparent 35%,rgba(5,4,15,.42) 100%)}.nav{position:fixed;z-index:10;top:0;left:0;right:0;height:76px;padding:0 clamp(18px,5vw,72px);display:flex;align-items:center;justify-content:space-between}.wordmark{font-size:10px;letter-spacing:.18em;color:#eee0f1}.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--pink);box-shadow:0 0 15px var(--pink);margin-right:9px}.glass{background:linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,.065));border:1px solid rgba(255,255,255,.27);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),inset 0 -1px 0 rgba(255,255,255,.05),0 16px 48px rgba(0,0,0,.22);backdrop-filter:blur(28px) saturate(170%);-webkit-backdrop-filter:blur(28px) saturate(170%)}.sound{display:flex;align-items:center;gap:8px;border-radius:30px;padding:10px 15px;color:#fff1fb;font:500 11px 'DM Sans';cursor:pointer}.music-icon{font-size:16px;color:#ffc5e5}.slide{position:relative;z-index:2;min-height:100svh;width:100%;padding:112px 22px 68px;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;animation:slideIn .72s cubic-bezier(.2,.75,.25,1) both}.slide.active{display:flex}@keyframes slideIn{from{opacity:0;transform:translate3d(0,17px,0) scale(.994)}to{opacity:1;transform:none}}.eyebrow,.slide-count{font-size:9px;letter-spacing:.22em;color:#efc1dd;font-weight:600}.eyebrow{display:flex;align-items:center;gap:12px}.eyebrow span{width:24px;height:1px;background:linear-gradient(90deg,transparent,#f4b7db)}.halo-heart{position:relative;width:180px;height:142px;display:grid;place-items:center;margin:20px 0 4px}.halo{position:absolute;border:1px solid rgba(255,202,232,.27);border-radius:50%;transform:rotate(-24deg)}.h1{width:152px;height:72px;animation:orbit 16s linear infinite}.h2{width:115px;height:115px;border-color:rgba(204,188,255,.23);animation:orbit 19s linear infinite reverse}.heart{font-size:48px;filter:drop-shadow(0 0 25px rgba(255,130,195,.7));animation:float 3s ease-in-out infinite}.halo-heart i,.halo-heart b{position:absolute;color:#ffe6f4}.halo-heart i{right:15px;top:13px}.halo-heart b{left:14px;bottom:10px;font-size:20px}@keyframes orbit{to{transform:rotate(336deg)}}@keyframes float{50%{transform:translateY(-8px) scale(1.05)}}.kicker{font-size:12px;letter-spacing:.06em;color:#d5c7df;margin:7px 0 12px}h1,h2{font:500 clamp(50px,8.8vw,94px)/.99 'Playfair Display',serif;letter-spacing:-.045em;margin:0}h1 em,h2 em{font-weight:500;color:var(--pale);text-shadow:0 0 34px rgba(247,180,220,.27)}.cover-copy{max-width:390px;color:#d6c9dd;font-size:13px;line-height:1.85;margin:20px 0 26px}.main-btn,.next-btn{border:1px solid rgba(255,240,250,.64);border-radius:30px;padding:15px 23px;background:linear-gradient(115deg,#f7b9dc,#d7c5ff);color:#2b1730;font:700 12px 'DM Sans';box-shadow:0 8px 34px rgba(220,145,199,.25),inset 0 1px 0 rgba(255,255,255,.85);cursor:pointer;transition:transform .25s,box-shadow .25s}.main-btn:hover,.next-btn:hover{transform:translateY(-3px);box-shadow:0 13px 40px rgba(220,145,199,.38)}.main-btn span,.next-btn span{margin-left:18px;font-size:16px}.bottom-note{position:absolute;bottom:25px;color:#a99ab5;font-size:8px;letter-spacing:.22em}.bottom-note span{color:#f6b7dc;margin-left:7px}.story{gap:0}.slide-count{margin-bottom:24px}.slide-count span{color:#aa98b8;margin:0 5px}.story-symbol{font-size:35px;margin-bottom:16px;filter:drop-shadow(0 0 17px rgba(245,174,216,.55))}h2{font-size:clamp(43px,6.6vw,72px)}.glass-panel{width:min(650px,100%);border-radius:27px;text-align:left;padding:clamp(21px,3.5vw,32px);margin-top:25px}.glass-panel p{font-size:clamp(13px,1.5vw,15px);line-height:1.95;color:#f1e8f2;margin:0 0 17px}.glass-panel p:last-child{margin-bottom:0}.next-btn{margin-top:24px}.letter-slide{justify-content:center}.letter-slide h2{margin:12px 0 0}.letter-panel{padding:clamp(19px,3vw,28px);width:min(720px,100%)}.letter-top,.letter-bottom{display:flex;justify-content:space-between;align-items:center;color:#f0bedc;font-size:9px;letter-spacing:.17em}.letter-top{padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.15)}.letter-panel p{font-size:clamp(12px,1.45vw,14px);line-height:1.85;color:#f1e8f2;margin:15px 0}.letter-panel p:first-of-type{font:600 20px 'Playfair Display';color:#ffd7ec}.letter-panel .signoff{color:#ffe0f0;font-size:13px}.signoff em{font-family:'Playfair Display';font-size:16px;color:#ffcce6}.letter-bottom{padding-top:13px;border-top:1px solid rgba(255,255,255,.13);margin-top:13px}.finale{overflow:hidden}.final-heart{font-size:58px;filter:drop-shadow(0 0 27px #e77bb7);margin-bottom:20px;animation:float 3s infinite}.finale h2{font-size:clamp(48px,8vw,84px);margin:19px 0}.finale>p{max-width:420px;color:#e0d3e6;font-size:14px;line-height:1.9}.couple{border-radius:35px;padding:14px 21px;margin:16px 0 13px;font-size:12px;color:#fff0fa}.couple span{color:var(--pink);margin:0 10px}.forever{font:italic 16px 'Playfair Display';color:#f7c9e3;margin:8px 0 24px}.replay{background:transparent;border:0;color:#eec9e2;font:11px 'DM Sans';letter-spacing:.1em;cursor:pointer}@media(max-width:650px){.nav{height:65px;padding:0 16px}.wordmark{font-size:8px;letter-spacing:.13em}.sound{padding:9px 12px;font-size:10px}.slide{padding:96px 17px 62px}.halo-heart{height:125px;margin:17px 0 2px}.cover-copy{font-size:12px;max-width:320px}.eyebrow{font-size:8px;letter-spacing:.15em;gap:7px}.eyebrow span{width:15px}.story{justify-content:center}.slide-count{margin-bottom:19px}.glass-panel{margin-top:20px;border-radius:23px}.glass-panel p{font-size:13px;line-height:1.85}.letter-panel p{font-size:11.5px;line-height:1.78;margin:12px 0}.letter-panel p:first-of-type{font-size:18px}.letter-panel .signoff{font-size:12px}.letter-panel{padding:17px}.letter-top,.letter-bottom{font-size:8px;letter-spacing:.12em}.bottom-note{bottom:17px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-  
+(() => {
+  "use strict";
+
+  const canvas = document.getElementById("sky");
+  const context = canvas.getContext("2d", { alpha: true });
+  const slides = [...document.querySelectorAll(".slide")];
+  const openButton = document.getElementById("openButton");
+  const replayButton = document.getElementById("replayButton");
+  const soundToggle = document.getElementById("soundToggle");
+  const soundLabel = document.getElementById("soundLabel");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const colors = ["#ffd7ee", "#f7b4dc", "#d9ceff", "#fff4d6", "#f9c5a6"];
+  const rockets = [];
+  const particles = [];
+  let slideIndex = 0;
+  let animationFrame = 0;
+  let lastFrame = 0;
+  let width = 0;
+  let height = 0;
+  let audioContext = null;
+  let audioGain = null;
+  let ambientNodes = [];
+  let soundOn = false;
+
+  const random = (min, max) => Math.random() * (max - min) + min;
+  const choose = (items) => items[Math.floor(Math.random() * items.length)];
+
+  function resizeCanvas() {
+    const ratio = Math.min(window.devicePixelRatio || 1, 1.75);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = Math.floor(width * ratio);
+    canvas.height = Math.floor(height * ratio);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+  }
+
+  function createBurst(x, y, color, size = 1) {
+    const count = Math.round((width < 600 ? 38 : 62) * size);
+    for (let i = 0; i < count; i += 1) {
+      const angle = (Math.PI * 2 * i) / count + random(-0.035, 0.035);
+      const speed = random(1.2, 4.1) * size;
+      particles.push({
+        x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+        life: random(42, 84), maxLife: 84, size: random(1, 2.4) * size,
+        color, gravity: random(0.018, 0.045), drag: 0.985
+      });
+    }
+    if (soundOn) playPop();
+  }
+
+  function launch(x = random(width * 0.12, width * 0.88), targetY = random(height * 0.15, height * 0.42), size = 1) {
+    rockets.push({ x, y: height + 12, targetY, vy: random(-8.8, -10.8), color: choose(colors), size, trail: [] });
+  }
+
+  function update(delta) {
+    const step = Math.min(delta / 16.67, 2);
+    rockets.forEach((rocket, index) => {
+      rocket.trail.push({ x: rocket.x, y: rocket.y });
+      if (rocket.trail.length > 10) rocket.trail.shift();
+      rocket.y += rocket.vy * step;
+      rocket.vy += 0.055 * step;
+      if (rocket.y <= rocket.targetY || rocket.vy >= -1) {
+        createBurst(rocket.x, rocket.y, rocket.color, rocket.size);
+        rockets.splice(index, 1);
+      }
+    });
+    particles.forEach((particle, index) => {
+      particle.x += particle.vx * step;
+      particle.y += particle.vy * step;
+      particle.vx *= Math.pow(particle.drag, step);
+      particle.vy = particle.vy * Math.pow(particle.drag, step) + particle.gravity * step;
+      particle.life -= step;
+      if (particle.life <= 0) particles.splice(index, 1);
+    });
+  }
+
+  function draw() {
+    context.clearRect(0, 0, width, height);
+    rockets.forEach((rocket) => {
+      context.beginPath();
+      rocket.trail.forEach((point, index) => {
+        context.globalAlpha = index / rocket.trail.length;
+        if (index === 0) context.moveTo(point.x, point.y);
+        else context.lineTo(point.x, point.y);
+      });
+      context.strokeStyle = rocket.color;
+      context.lineWidth = 1.5;
+      context.stroke();
+      context.globalAlpha = 1;
+      context.fillStyle = "#fff8fb";
+      context.shadowBlur = 12;
+      context.shadowColor = rocket.color;
+      context.fillRect(rocket.x - 1, rocket.y - 1, 2, 2);
+      context.shadowBlur = 0;
+    });
+    particles.forEach((particle) => {
+      context.globalAlpha = Math.max(0, particle.life / particle.maxLife);
+      context.fillStyle = particle.color;
+      context.shadowBlur = 8;
+      context.shadowColor = particle.color;
+      context.beginPath();
+      context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+      context.fill();
+    });
+    context.globalAlpha = 1;
+  }
+
+  function animate(timestamp) {
+    const delta = timestamp - lastFrame;
+    lastFrame = timestamp;
+    update(delta || 16.67);
+    draw();
+    animationFrame = window.requestAnimationFrame(animate);
+  }
+
+  function scheduleAtmosphere() {
+    if (reduceMotion.matches) return;
+    window.setTimeout(() => {
+      if (slideIndex > 0) launch(undefined, random(height * 0.18, height * 0.45), 0.65);
+      scheduleAtmosphere();
+    }, random(1700, 3200));
+  }
+
+  function showSlide(nextIndex) {
+    slideIndex = Math.max(0, Math.min(nextIndex, slides.length - 1));
+    slides.forEach((slide, index) => {
+      const active = index === slideIndex;
+      slide.classList.toggle("active", active);
+      slide.setAttribute("aria-hidden", String(!active));
+    });
+    if (slideIndex === slides.length - 1 && !reduceMotion.matches) {
+      for (let i = 0; i < 7; i += 1) window.setTimeout(() => launch(random(width * 0.08, width * 0.92), random(height * 0.12, height * 0.4), 1.1), i * 220);
+    }
+  }
+
+  function playPop() {
+    if (!audioContext || !audioGain) return;
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(random(280, 420), audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(90, audioContext.currentTime + 0.16);
+    gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.035, audioContext.currentTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.18);
+    oscillator.connect(gain).connect(audioGain);
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.2);
+  }
+
+  function startAmbient() {
+    if (!audioContext || ambientNodes.length) return;
+    const frequencies = [220, 277.18, 329.63];
+    ambientNodes = frequencies.map((frequency, index) => {
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      oscillator.type = index === 1 ? "triangle" : "sine";
+      oscillator.frequency.value = frequency;
+      gain.gain.value = 0.018;
+      oscillator.connect(gain).connect(audioGain);
+      oscillator.start();
+      return oscillator;
+    });
+  }
+
+  function stopAmbient() {
+    ambientNodes.forEach((oscillator) => {
+      oscillator.stop();
+      oscillator.disconnect();
+    });
+    ambientNodes = [];
+  }
+
+  function toggleSound() {
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      audioGain = audioContext.createGain();
+      audioGain.gain.value = 0.28;
+      audioGain.connect(audioContext.destination);
+    }
+    soundOn = !soundOn;
+    if (soundOn) {
+      audioContext.resume();
+      startAmbient();
+    } else {
+      stopAmbient();
+      audioContext.suspend();
+    }
+    soundToggle.setAttribute("aria-pressed", String(soundOn));
+    soundToggle.setAttribute("aria-label", soundOn ? "Turn ambient sound off" : "Turn ambient sound on");
+    soundLabel.textContent = soundOn ? "Sound on" : "Sound off";
+  }
+
+  openButton.addEventListener("click", () => {
+    showSlide(1);
+    if (!reduceMotion.matches) {
+      for (let i = 0; i < 10; i += 1) window.setTimeout(() => launch(width * (0.12 + (i % 5) * 0.19), random(height * 0.12, height * 0.42), 1.05), i * 100);
+    }
+  });
+  document.querySelectorAll("[data-next]").forEach((button) => button.addEventListener("click", () => showSlide(slideIndex + 1)));
+  replayButton.addEventListener("click", () => {
+    rockets.length = 0;
+    particles.length = 0;
+    showSlide(0);
+  });
+  soundToggle.addEventListener("click", toggleSound);
+  window.addEventListener("resize", resizeCanvas, { passive: true });
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowRight" && slideIndex > 0) showSlide(slideIndex + 1);
+    if (event.key === "ArrowLeft" && slideIndex > 0) showSlide(slideIndex - 1);
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      window.cancelAnimationFrame(animationFrame);
+    } else {
+      lastFrame = performance.now();
+      animationFrame = window.requestAnimationFrame(animate);
+    }
+  });
+
+  resizeCanvas();
+  showSlide(0);
+  animationFrame = window.requestAnimationFrame(animate);
+  scheduleAtmosphere();
+})();
