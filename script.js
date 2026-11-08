@@ -1,65 +1,49 @@
-// Sky-shot fireworks: rockets rise from the lower edge and burst overhead.
-const canvas=document.getElementById('fireworks'),ctx=canvas.getContext('2d');
-let W,H,dpr,rockets=[],sparks=[],lastLaunch=0,active=false,finale=false;
-function resize(){dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(dpr,0,0,dpr,0,0)}
+// Efficient 2D sky-shot fireworks: capped pixel ratio, pooled frame loop and bounded particles.
+const canvas=document.getElementById('sky'),ctx=canvas.getContext('2d',{alpha:true});
+let W=innerWidth,H=innerHeight,DPR=1,rockets=[],particles=[],last=0,mode='idle',frame=0;
+const palette=['#ffb9df','#ffe5aa','#d3c3ff','#fff6fc','#ff83c6','#ffd0ed'];
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function resize(){W=innerWidth;H=innerHeight;DPR=Math.min(devicePixelRatio||1,1.35);canvas.width=Math.floor(W*DPR);canvas.height=Math.floor(H*DPR);canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(DPR,0,0,DPR,0,0)}
 addEventListener('resize',resize);resize();
-const colors=['#ffb2dc','#ffe5a8','#c9baff','#ffffff','#ff8dc8','#ffd0ee'];
-function launch(x=Math.random()*W,y=H+10,targetY=H*(.16+Math.random()*.3)){
- const hue=colors[Math.floor(Math.random()*colors.length)];
- rockets.push({x,y,vx:(Math.random()-.5)*1.2,vy:-(8+Math.random()*3),targetY,color:hue,trail:[]});
+function launch(x=Math.random()*W,y=H+12,scale=1){
+ const target=H*(.13+Math.random()*.34);
+ rockets.push({x,y,px:x,py:y,vx:(Math.random()-.5)*.65,vy:-(7.2+Math.random()*2.3)*scale,target,color:palette[(Math.random()*palette.length)|0],tail:[]});
 }
-function burst(x,y,color,power=1){
- const count=90+Math.floor(Math.random()*55);
- for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,s=(1.1+Math.random()*4.4)*power;
- sparks.push({x,y,px:x,py:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:55+Math.random()*38,max:90,size:.8+Math.random()*2.1,color,twinkle:Math.random()})}
- // glittering secondary crackle
- for(let i=0;i<24;i++){const a=Math.random()*Math.PI*2,s=1+Math.random()*2.3;sparks.push({x,y,px:x,py:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:75,max:75,size:.7,color:'#fff0bd',twinkle:1})}
+function explode(x,y,color,scale=1){
+ const n=Math.round((mode==='idle'?52:88)*scale);
+ for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=(1.05+Math.random()*3.7)*scale;
+ particles.push({x,y,px:x,py:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:45+Math.random()*35,max:80,r:.7+Math.random()*1.6,c:color,drag:.982,gravity:.045})}
+ // Bright crackling stars, limited count to preserve smoothness.
+ for(let i=0;i<Math.round(12*scale);i++){const a=Math.random()*Math.PI*2,s=1+Math.random()*2.1;particles.push({x,y,px:x,py:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:38+Math.random()*25,max:65,r:.7,c:'#fff4d5',drag:.98,gravity:.035})}
+ if(particles.length>1250)particles.splice(0,particles.length-1250);
 }
-function frame(t){
- requestAnimationFrame(frame);ctx.clearRect(0,0,W,H);
- // sparse ambient launchers from first screen; energetic volleys after opening
- const rate=active?(finale?240:720):2300;
- if(t-lastLaunch>rate){launch(W*(.08+Math.random()*.84));lastLaunch=t;if(active&&Math.random()>.55)setTimeout(()=>launch(W*(.12+Math.random()*.76)),180)}
- rockets=rockets.filter(r=>{
-  r.trail.push([r.x,r.y]);if(r.trail.length>10)r.trail.shift();
-  r.x+=r.vx;r.y+=r.vy;r.vy+=.075;
-  ctx.beginPath();r.trail.forEach((p,i)=>{if(i===0)ctx.moveTo(...p);else ctx.lineTo(...p)});
-  ctx.strokeStyle=r.color;ctx.lineWidth=2;ctx.shadowBlur=14;ctx.shadowColor=r.color;ctx.stroke();ctx.shadowBlur=0;
-  if(r.y<=r.targetY||r.vy>=-.4){burst(r.x,r.y,r.color,active?1.1:.72);return false}return true;
- });
- sparks=sparks.filter(s=>{
-  s.px=s.x;s.py=s.y;s.x+=s.vx;s.y+=s.vy;s.vx*=.986;s.vy=s.vy*.986+.045;s.life--;
-  const alpha=Math.max(0,s.life/s.max);
-  ctx.globalAlpha=alpha;ctx.strokeStyle=s.color;ctx.lineWidth=s.size;ctx.shadowBlur=s.twinkle?10:5;ctx.shadowColor=s.color;
-  ctx.beginPath();ctx.moveTo(s.px,s.py);ctx.lineTo(s.x,s.y);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;
-  return s.life>0;
- });
+function drawRocket(r){
+ r.tail.push([r.x,r.y]);if(r.tail.length>7)r.tail.shift();
+ ctx.beginPath();for(let i=0;i<r.tail.length;i++){const p=r.tail[i];if(i===0)ctx.moveTo(p[0],p[1]);else ctx.lineTo(p[0],p[1])}
+ ctx.strokeStyle=r.color;ctx.lineWidth=2;ctx.shadowBlur=12;ctx.shadowColor=r.color;ctx.stroke();ctx.shadowBlur=0;
+ ctx.beginPath();ctx.arc(r.x,r.y,2.1,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
 }
-requestAnimationFrame(frame);
-const pages=['intro','message','final'];function show(id){pages.forEach(p=>document.getElementById(p).classList.toggle('active',p===id));window.scrollTo({top:0,behavior:'smooth'})}
-const messageParts=[
-'Happyyy Diwali bangarammm 💗✨🪔',
-'Nuvvu na life loki ochina taruvatha everything changed. You are not just my lucky charm, you\'re the light in my darkest days and ever, my biggest support and the reason behind my smile. Sometimes I genuinely feel words are not enough to explain how much your presence means to me. Nuvvu pakkana unte even the hardest days feel easy, and without you everything feels so numb and empty. 🥺💖',
-'Ee Diwali ki I just wish that manam iddaram life lo chala successful avvali mana dream careers achieve cheyyali, parents ni proud feel ayela cheyali and finally mana biggest dream marriage ni reality cheskovali. 🥹💗',
-'I don\'t expect a perfect journey, but I wish we never give up on each other. How many ups and downs vachina, misunderstandings vachina, let\'s keep growing, supporting and succeeding together forever. 🫂🤗🥺',
-'One day, mana careers lo settle ayyi, mana families blessings tho husband and wife ga kalisi Diwali celebrate cheskovali. That\'s the dream I always wishing for. 💖✨',
-'Happy Diwali once again, my lucky charm, my happiness, my future Mrs. Hema Charan. 💋😚🥰☺️🫂😭'
-];
-const typed=document.getElementById('typed'),signature=document.getElementById('signature'),finish=document.getElementById('finish');
-let started=false;
-function revealMessage(){
- if(started)return;started=true;active=true;finale=false;show('message');
- typed.innerHTML='';signature.classList.remove('show');finish.hidden=true;
- // Staggered paragraph reveal timed to fireworks, then reveal the final signature.
- messageParts.forEach((text,i)=>{setTimeout(()=>{const p=document.createElement('span');p.className='para';p.textContent=text;typed.appendChild(p);if(i===messageParts.length-1){setTimeout(()=>{signature.classList.add('show');finish.hidden=false;},900)}},650+i*2450)});
- // Launch a synchronized opening volley.
- for(let i=0;i<7;i++)setTimeout(()=>launch(W*(.08+.84*(i/6))),i*170);
+function tick(t){
+ requestAnimationFrame(tick);const dt=Math.min((t-last||16.7)/16.7,1.6);last=t;frame++;
+ // Light idle ambience; frequent volleys only after opening. Finale is a celebratory barrage.
+ const interval=mode==='final'?210:mode==='active'?530:2400;
+ if(!reduced && t-(tick.launchAt||0)>interval){launch(W*(.07+Math.random()*.86),H+10,mode==='idle'?.75:1.12);tick.launchAt=t;
+  if(mode==='final'&&Math.random()>.38)setTimeout(()=>launch(W*(.08+Math.random()*.84),H+10,1.1),110)}
+ ctx.clearRect(0,0,W,H);
+ for(let i=rockets.length-1;i>=0;i--){const r=rockets[i];r.px=r.x;r.py=r.y;r.x+=r.vx*dt;r.y+=r.vy*dt;r.vy+=.075*dt;drawRocket(r);if(r.y<=r.target||r.vy>-.2){explode(r.x,r.y,r.color,mode==='idle'?.8:1.2);rockets.splice(i,1)}}
+ for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.px=p.x;p.py=p.y;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=Math.pow(p.drag,dt);p.vy=p.vy*Math.pow(p.drag,dt)+p.gravity*dt;p.life-=dt;
+  const a=Math.max(0,p.life/p.max);ctx.globalAlpha=a;ctx.strokeStyle=p.c;ctx.lineWidth=p.r;ctx.shadowBlur=3;ctx.shadowColor=p.c;ctx.beginPath();ctx.moveTo(p.px,p.py);ctx.lineTo(p.x,p.y);ctx.stroke();if(p.life<=0)particles.splice(i,1)}
+ ctx.globalAlpha=1;ctx.shadowBlur=0;
 }
-document.getElementById('open').addEventListener('click',revealMessage);
-document.getElementById('finish').addEventListener('click',()=>{finale=true;active=true;show('final');for(let i=0;i<16;i++)setTimeout(()=>launch(W*(.05+Math.random()*.9)),i*210)});
-document.getElementById('again').addEventListener('click',()=>{started=false;active=false;finale=false;typed.innerHTML='';signature.classList.remove('show');finish.hidden=true;show('intro')});
+requestAnimationFrame(tick);
 
-// Optional original synthesized bell-like accompaniment. Starts only after user presses Sound.
-let audio=null,loop=null,music=false,step=0;const notes=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,1046.5];
-function tone(f){if(!audio)return;let o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,audio.currentTime);g.gain.exponentialRampToValueAtTime(.035,audio.currentTime+.04);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+.9);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+1)}
-document.getElementById('music').addEventListener('click',async()=>{if(music){clearInterval(loop);music=false;document.querySelector('#music span').textContent='Sound off';return}const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audio=audio||new AC();await audio.resume();music=true;document.querySelector('#music span').textContent='Sound on';loop=setInterval(()=>{tone(notes[step++%notes.length]);},650)});
+const ids=['cover','story1','story2','story3','letter','final'];let current='cover';
+function show(id){ids.forEach(v=>document.getElementById(v).classList.toggle('active',v===id));current=id;window.scrollTo({top:0,behavior:'smooth'});if(id==='final'){mode='final';for(let i=0;i<8;i++)setTimeout(()=>launch(W*(.08+Math.random()*.84),H+10,1.15),i*180)}}
+document.getElementById('start').addEventListener('click',()=>{mode='active';show('story1');for(let i=0;i<6;i++)setTimeout(()=>launch(W*(.08+i*.16),H+10,1.15),i*190)});
+document.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.next)));
+document.getElementById('replay').addEventListener('click',()=>{mode='idle';show('cover')});
+
+// Soft original synthesized bell tones; browser audio begins only after explicit tap.
+let audio=null,musicTimer=null,musicOn=false,index=0;const melody=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,1046.5];
+function note(freq){if(!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(.0001,audio.currentTime);g.gain.exponentialRampToValueAtTime(.026,audio.currentTime+.05);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+.85);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+.9)}
+document.getElementById('sound').addEventListener('click',async()=>{if(musicOn){clearInterval(musicTimer);musicOn=false;document.getElementById('soundText').textContent='Sound off';document.getElementById('sound').setAttribute('aria-pressed','false');return}const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audio=audio||new AC();await audio.resume();musicOn=true;document.getElementById('soundText').textContent='Sound on';document.getElementById('sound').setAttribute('aria-pressed','true');note(melody[index++%melody.length]);musicTimer=setInterval(()=>note(melody[index++%melody.length]),700)});
